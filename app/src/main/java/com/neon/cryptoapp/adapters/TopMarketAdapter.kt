@@ -6,16 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.neon.cryptoapp.MainActivity
 import com.neon.cryptoapp.R
-
 import com.neon.cryptoapp.databinding.TopCurrencyLayoutBinding
-import com.neon.cryptoapp.fragments.HomeFragment
 import com.neon.cryptoapp.models.CryptoCurrency
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 
-class TopMarketAdapter(var context: Context, val list: List<CryptoCurrency>): RecyclerView.Adapter<TopMarketAdapter.TopMarketViewHolder>() {
+class TopMarketAdapter(var context: Context, private val list: List<CryptoCurrency>): RecyclerView.Adapter<TopMarketAdapter.TopMarketViewHolder>() {
 
     inner class TopMarketViewHolder(view: View): RecyclerView.ViewHolder(view) {
         var binding = TopCurrencyLayoutBinding.bind(view)
@@ -28,6 +24,7 @@ class TopMarketAdapter(var context: Context, val list: List<CryptoCurrency>): Re
     override fun onBindViewHolder(holder: TopMarketViewHolder, position: Int) {
         val item = list[position]
         holder.binding.topCurrencyNameTextView.text = item.name
+
         Glide.with(context).load("https://s2.coinmarketcap.com/static/img/coins/64x64/${item.id}.png")
             .thumbnail(Glide.with(context).load(R.drawable.spinner))
             .into(holder.binding.topCurrencyImageView)

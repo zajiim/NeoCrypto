@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import com.neon.cryptoapp.R
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayoutMediator
+import com.neon.cryptoapp.adapters.TopGainLossAdapter
 import com.neon.cryptoapp.adapters.TopMarketAdapter
 import com.neon.cryptoapp.api.ApiInterface
 import com.neon.cryptoapp.api.RetrofitInstance
@@ -29,7 +31,38 @@ class HomeFragment : Fragment() {
 
         getTopCurrencyList()
 
+        setTabLayout()
+
         return binding.root
+    }
+
+    private fun setTabLayout() {
+        val adapter = TopGainLossAdapter(this)
+        binding.contentViewPager.adapter = adapter
+
+        binding.contentViewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if(position == 0) {
+                    binding.topGainIndicator.visibility = View.VISIBLE
+                    binding.topGainIndicator.visibility = View.GONE
+                } else {
+                    binding.topGainIndicator.visibility = View.GONE
+                    binding.topGainIndicator.visibility = View.VISIBLE
+                }
+            }
+        })
+
+        TabLayoutMediator(binding.tabLayout, binding.contentViewPager) {
+            tab, position ->
+            val title = if(position == 0) {
+                "Top Gainers"
+            } else {
+                "Top Losers"
+            }
+            tab.text = title
+        }.attach()
+
     }
 
     private fun getTopCurrencyList() {
