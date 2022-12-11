@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="indicator_bg">#8A8A8A</color>
     <color name="blue_color">#083C63</color>
+    <color name="blue_color_light">#2364C5</color>
+    <color name="olive_green">#556b2f</color>
 </resources>
