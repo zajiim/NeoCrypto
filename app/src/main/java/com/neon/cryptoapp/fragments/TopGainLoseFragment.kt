@@ -40,8 +40,8 @@ class TopGainLoseFragment : Fragment() {
                     val dataItem = res.body()!!.data.cryptoCurrencyList
 
                     Collections.sort(dataItem) {
-                        o1, o2 -> (o2.quotes[0].percentChange24h.toInt())
-                        .compareTo(o1.quotes[0].percentChange24h.toInt())
+                        o1, o2 -> (o2.quotes[0].percentChange1h.toInt())
+                        .compareTo(o1.quotes[0].percentChange1h.toInt())
                     }
 
                     binding.spinKitView.visibility = View.GONE
