@@ -1,5 +1,6 @@
 package com.neon.cryptoapp.fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.neon.cryptoapp.R
 import com.neon.cryptoapp.databinding.FragmentDetailsBinding
 import com.neon.cryptoapp.models.CryptoCurrency
@@ -23,15 +26,66 @@ class DetailsFragment : Fragment() {
     ): View? {
         binding = FragmentDetailsBinding.inflate(layoutInflater)
 
-        val data: CryptoCurrency = item.data!!
+        var data: CryptoCurrency = item.data!!
         setupDetails(data)
 
         loadChart(data)
 
         setButtonOnClick(data)
 
+        addToFavorites(data)
+
 
         return binding.root
+    }
+
+    var favoriteList: ArrayList<String> ?= null
+    var favoriteListIsChecked = false
+
+    private fun addToFavorites(data: CryptoCurrency) {
+        readData()
+        favoriteListIsChecked = if(favoriteList!!.contains(data.symbol)) {
+            binding.addWatchlistButton.setImageResource(R.drawable.star_icon)
+            true
+        } else {
+            binding.addWatchlistButton.setImageResource(R.drawable.star_outline_icon)
+            false
+        }
+
+        binding.addWatchlistButton.setOnClickListener {
+            favoriteListIsChecked = if(!favoriteListIsChecked) {
+                if(!favoriteList!!.contains(data.symbol)) {
+                    favoriteList!!.add(data.symbol)
+                }
+                storeData()
+                binding.addWatchlistButton.setImageResource(R.drawable.star_icon)
+                true
+            } else {
+                binding.addWatchlistButton.setImageResource(R.drawable.star_outline_icon)
+                favoriteList!!.remove(data.symbol)
+                storeData()
+                false
+            }
+        }
+
+    }
+
+    private fun storeData() {
+        val sharedPreferences = requireContext().getSharedPreferences("favoriteList", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val gson = Gson()
+        val json = gson.toJson(favoriteList)
+        editor.putString("favoriteList", json)
+        editor.apply()
+    }
+
+    private fun readData() {
+        val sharedPreferences = requireContext().getSharedPreferences("favoriteList", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = sharedPreferences.getString("favoriteList", ArrayList<String>().toString())
+        val type = object: TypeToken<ArrayList<String>>(){}.type
+        favoriteList = gson.fromJson(json, type)
+
     }
 
     private fun setButtonOnClick(data: CryptoCurrency) {

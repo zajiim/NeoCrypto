@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import com.neon.cryptoapp.R
 import com.neon.cryptoapp.adapters.MarketAdapter
 import com.neon.cryptoapp.api.ApiInterface
 import com.neon.cryptoapp.api.RetrofitInstance
@@ -52,14 +51,18 @@ class TopGainLoseFragment : Fragment() {
                         for (i in 0..9) {
                             list.add(dataItem[i])
                         }
-                        binding.topGainLoseRecyclerView.adapter = MarketAdapter(requireContext(), list)
+                        binding.topGainLoseRecyclerView.adapter = MarketAdapter(requireContext(),
+                            list,
+                            "home")
 
                     } else {
                         list.clear()
                         for (i in 0..9) {
                             list.add(dataItem[dataItem.size-1-i])
                         }
-                        binding.topGainLoseRecyclerView.adapter = MarketAdapter(requireContext(), list)
+                        binding.topGainLoseRecyclerView.adapter = MarketAdapter(requireContext(),
+                            list,
+                            "home")
 
                     }
 

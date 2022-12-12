@@ -9,11 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.neon.cryptoapp.R
 import com.neon.cryptoapp.databinding.CurrencyItemLayoutBinding
+import com.neon.cryptoapp.fragments.FavoritesFragmentDirections
 import com.neon.cryptoapp.fragments.HomeFragmentDirections
+import com.neon.cryptoapp.fragments.StatsFragment
+import com.neon.cryptoapp.fragments.StatsFragmentDirections
 import com.neon.cryptoapp.models.CryptoCurrency
 
 
-class MarketAdapter(var context: Context, var list: List<CryptoCurrency>): RecyclerView.Adapter<MarketAdapter.MarketViewHolder>() {
+class MarketAdapter(var context: Context, var list: List<CryptoCurrency>, var type: String): RecyclerView.Adapter<MarketAdapter.MarketViewHolder>() {
 
     inner class MarketViewHolder(view: View): RecyclerView.ViewHolder(view) {
         var binding = CurrencyItemLayoutBinding.bind(view)
@@ -45,9 +48,20 @@ class MarketAdapter(var context: Context, var list: List<CryptoCurrency>): Recyc
         }
 
         holder.itemView.setOnClickListener {
-            findNavController(it).navigate(
-                HomeFragmentDirections.actionHomeFragmentToDetailsFragment(item)
-            )
+            if(type == "home") {
+                findNavController(it).navigate(
+                    HomeFragmentDirections.actionHomeFragmentToDetailsFragment(item)
+                )
+            } else if(type == "stats") {
+                findNavController(it).navigate(
+                    StatsFragmentDirections.actionStatsFragmentToDetailsFragment(item)
+                )
+            } else {
+                findNavController(it).navigate(
+                    FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(item)
+                )
+            }
+
         }
 
 
@@ -57,4 +71,10 @@ class MarketAdapter(var context: Context, var list: List<CryptoCurrency>): Recyc
     }
 
     override fun getItemCount(): Int = list.size
+
+
+    fun updateData(dataItem: List<CryptoCurrency>) {
+        list = dataItem
+        notifyDataSetChanged()
+    }
 }
